@@ -21,7 +21,9 @@ package phymem
 //    if (sysctl(mib, sizeof(mib) / sizeof(mib[0]), &ki, &len, NULL, 0) == -1) {
 //        return -2;
 //    }
-//    return ki.ki_rssize;
+//    long pagesize = sysconf(_SC_PAGESIZE);
+//
+//    return ki.ki_rssize * pagesize;
 //}
 import "C"
 import "fmt"
@@ -34,5 +36,5 @@ func Current() (uint, error) {
 	if rss < 0 {
 		return 0, fmt.Errorf("failed to get RSS via sysctl: %d", rss)
 	}
-	return uint(rss) * 4096, nil
+	return uint(rss), nil
 }
